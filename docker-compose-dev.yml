@@ -1,0 +1,42 @@
+services:
+  mongo-db:
+    image: mongo:7.0.2-jammy
+    env_file:
+      - ".env"
+    volumes:
+      - .mongodb-data-dev:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test
+      retries: 3
+      timeout: 5s
+      interval: 5s
+
+  webserver:
+    image: stealthy:latest
+    build:
+      context: .
+      target: application
+    ports:
+      - "443:8443"
+      - "5005:5005"
+    depends_on:
+      - mongo-db
+    volumes:
+      - ./wars:/usr/local/tomcat/webapps
+    environment:
+      JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_MONGODB_AUTH_USERNAME: "backend"
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: "password"
+      ME_CONFIG_BASICAUTH_USERNAME: "admin"
+      ME_CONFIG_BASICAUTH_PASSWORD: "admin"
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: "mongo-db"
+    depends_on:
+      - mongo-db
