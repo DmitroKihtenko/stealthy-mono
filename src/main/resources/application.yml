@@ -1,0 +1,42 @@
+# Logging configuration
+logging:
+  level:
+    # Global logging level
+    root: info
+  pattern:
+    # Log records format
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %level - %logger{36} - %msg%n"
+
+files:
+  # Maximum amount of files that can be displayed on one page on web UI
+  per-page-limit: 6
+  # Guaranteed lifetime of each file in minutes after downloading. As soon
+  # as more time has elapsed than specified, the server will delete this file
+  expiration-minutes: 20
+  # Time in seconds between starts of the process of deleting files that
+  # have expired
+  cleanup-seconds-period: 60
+
+institution:
+  # Your company name that will be displayed in footer
+  name: "Stealthy"
+  # Your company description that will be displayed in footer"
+  description: "Web application for secure sharing sensitive information"
+  # Your company time zone: required for correct displaying time related
+  # information
+  time-zone-hours-offset: 2
+
+spring:
+  servlet:
+    multipart:
+      # Max size for files for uploading using multipart-form-data
+      max-file-size: 50MB
+      # Max size for request body
+      max-request-size: 50MB
+  data:
+    # MongoDB connection configuration
+    mongodb:
+      # MongoDB Stealthy application connection string
+      uri: "mongodb://backend:password@mongo-db:27017"
+      # MongoDB Stealthy application database name
+      database: "stealthy-backend"

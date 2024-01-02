@@ -1,0 +1,22 @@
+services:
+  mongo-db:
+    image: mongo:7.0.2-jammy
+    env_file:
+      - ".env"
+    volumes:
+      - .mongodb-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test
+      retries: 3
+      timeout: 5s
+      interval: 5s
+
+  webserver:
+    image: stealthy:latest
+    build:
+      context: .
+      target: application
+    ports:
+      - "443:8443"
+    depends_on:
+      - mongo-db
