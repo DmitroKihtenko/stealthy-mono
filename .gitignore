@@ -1,0 +1,14 @@
+target/
+wars/
+
+.*
+!.env
+!.env.example
+!.gitignore
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
